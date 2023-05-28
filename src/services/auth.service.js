@@ -17,12 +17,14 @@ const todo = (user) => {
 console.log(todo);
 
 
-const saveTodo = (id, name, date, completed, user) => {
+const saveTodo = (id, name, date, edate, comment, completed, user) => {
   return axios
   .post(API_URL + "saveTodos", {
     id,
     name,
     date,
+    edate,
+    comment,
     completed,
     user,
   })
@@ -33,11 +35,13 @@ const saveTodo = (id, name, date, completed, user) => {
   });
 };
 
-const updateTodo = (name, date, completed, user,id) => {
+const updateTodo = (name, date, edate,comment, completed, user,id) => {
   return axios
   .put(API_URL + "updateTodos", {
     name,
     date,
+    edate,
+    comment,
     completed,
     user,
     id,

@@ -6,9 +6,11 @@ import "react-datepicker/dist/react-datepicker.css";
 
 export default function Todo(props) {
     const [isEditing, setEditing] = useState(false);
-    const [newName, setNewName] = useState("")
-    const [description, setDescription] = useState("")
+    const [newName, setNewName] = useState(props.name)
+    const [comment, setComment] = useState("")
     const [newDate, setNewDate] = useState(new Date());
+    const [newEdate, setNewEdate] = useState(new Date());
+   
     function handleChange(e) {
         setNewName(e.target.value);
     }
@@ -17,18 +19,24 @@ export default function Todo(props) {
         setNewDate(e);
     }
 
+    function handleEDateChange(e) {
+        setNewEdate(e);
+    }
+
     function handleChangeComment(e) {
-        setDescription(e.target.value);
-        console.log(e);
+        setComment(e.target.value);
+        // consqole.log(e);
     }
     function handleSubmit(e) {
         const currentUser = AuthService.getCurrentUser();
         e.preventDefault();
-        props.editTask(props.id, newName, newDate);
+        props.editTask(props.id, newName, newDate, newEdate, comment);
+        AuthService.updateTodo(newName, newDate, newEdate, comment, false, currentUser.username, props.id);
         setNewName("");
         setNewDate(new Date());
+        setNewEdate(new Date());
+        setComment("");
         setEditing(false);
-        AuthService.updateTodo(newName, newDate, false, currentUser.username, props.id);
       }
     const editingTemplate = (
         <form className="stack-small" onSubmit={handleSubmit}>
@@ -43,22 +51,30 @@ export default function Todo(props) {
                     value={newName}
                     onChange={handleChange} />
                 
-                <label className="todo-label" htmlFor={props.id}>
+                {/* <label className="todo-label" htmlFor={props.id}>
                     New Date for
                 </label>
              
                 <DatePicker 
                 selected={newDate} 
                 onChange={date => handleDateChange(date)} 
+                /> */}
+
+                <label className="todo-label" htmlFor={props.id}>
+                    Select New Expiry Date for {new Date(props.edate).toDateString()}
+                </label>
+                <DatePicker 
+                selected={newEdate} 
+                onChange={date => handleEDateChange(date)} 
                 />
- <label className="todo-label" htmlFor={props.id}>
-                    Provide your comments 
+                <label className="todo-label" htmlFor={props.id}>
+                    Provide your comments {props.comment}
                 </label>
                 
                 <input id={props.id}
                     className="todo-text"
                     type="text"
-                    value={description}
+                    value={comment}
                     onChange={handleChangeComment} />
 
             </div>
@@ -94,13 +110,23 @@ export default function Todo(props) {
                    Task Name {props.name}
                 </label>
                 <label className="todo-label" htmlFor={props.id}>
-                   Expiry On the Date
+                   Start Date
                 </label>
                 <DatePicker 
                 selected={props.date} 
                 onChange={date => handleDateChange(date)} 
                 />
-              
+
+<label className="todo-label" htmlFor={props.id}>
+                   Expiry Date
+                </label>
+                <DatePicker 
+                selected={props.edate} 
+                onChange={date => handleEDateChange(date)} 
+                />
+               <label className="todo-label" htmlFor={props.id}>
+                     {props.comment}
+                </label>
                 
             </div>
             <div className="btn-group">

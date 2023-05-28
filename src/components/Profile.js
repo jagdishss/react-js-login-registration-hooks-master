@@ -4,7 +4,7 @@ import axios from "axios";
 
 
 import { nanoid } from "nanoid";
-import Form from "./Form";
+import Todof from "./Todof";
 import FilterButton from "./FilterButton";
 import Todo from './Todo';
 
@@ -35,8 +35,9 @@ const Profile = (props) => {
         console.log(response.data);
         setLoading(false);
         response.data.forEach(element => {
+          element.edate = new Date(element.edate);
           element.date = new Date(element.date);
-          if (element.date.getDay() < new Date().getDay()) {
+          if (element.edate.getDay() < new Date().getDay()) {
             element.completed = true;
           }
           tasks.push(element);
@@ -58,6 +59,8 @@ const Profile = (props) => {
           id={task.id}
           name={task.name}
           date={task.date}
+          edate={task.edate}
+          comment={task.comment}
           completed={task.completed}
           key={task.id}
           toggleTaskCompleted={toggleTaskCompleted}
@@ -76,16 +79,18 @@ const Profile = (props) => {
   const tasksNoun = taskList.length !== 1 ? "tasks" : "task";
   const headingText = `${taskList.length} tasks remaining`;
 
-  function addTask(name, date) {
-    const newTask = { id: `todo-${nanoid()}`, name, date, completed: false };
+  function addTask(name, date, edate) {
+    const comment = '';
+    const newTask = { id: `todo-${nanoid()}`, name, date, edate, comment, completed: false };
     tasks.forEach(element => {
 
     });
     setTasks([...tasks, newTask]);
-    const res = AuthService.saveTodo(`todo-${nanoid()}`, name, date, false, currentUser.username);
+    const res = AuthService.saveTodo(`todo-${nanoid()}`, name, date, edate, comment, false, currentUser.username);
   }
 
   function toggleTaskCompleted(id) {
+    const comment = '';
     const updatedTasks = tasks.map((task) => {
       // console.log(task);
       // if this task has the same ID as the edited task
@@ -93,7 +98,7 @@ const Profile = (props) => {
         // use object spread to make a new object
         // whose `completed` prop has been inverted
 
-        return { ...task, date: new Date(), completed: !task.completed };
+        return { ...task, date: new Date(), comment, completed: !task.completed };
       }
       return task;
     });
@@ -106,14 +111,14 @@ const Profile = (props) => {
     setTasks(remainingTasks);
   }
 
-  function editTask(id, newName, newDate) {
+  function editTask(id, newName, newDate, newEdate, comment) {
     const editedTaskList = tasks.map((task) => {
       // if this task has the same ID as the edited task
       if (id === task.id) {
         //
 
 
-        return { ...task, name: newName, date: newDate, completed: false };
+        return { ...task, name: newName, date: newDate, edate: newEdate, comment: comment, completed: false };
       }
       return task;
     });
@@ -126,7 +131,7 @@ const Profile = (props) => {
   return (
     <div className="todoapp stack-large">
       <h1>TodoMatic</h1>
-      <Form addTask={addTask} />
+      <Todof addTask={addTask} />
 
       <div className="filters btn-group stack-exception">
         {
