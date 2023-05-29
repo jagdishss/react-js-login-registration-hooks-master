@@ -106,9 +106,12 @@ const Profile = (props) => {
   }
 
   function deleteTask(id) {
+    ;
     AuthService.deleteTodo(id);
     const remainingTasks = tasks.filter((task) => id !== task.id);
+    const deletedTask = tasks.filter((task) => id === task.id);
     setTasks(remainingTasks);
+    alert('Task ' +deletedTask[0].name +' has been deleted');
   }
 
   function editTask(id, newName, newDate, newEdate, comment) {

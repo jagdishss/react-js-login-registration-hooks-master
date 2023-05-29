@@ -1,5 +1,8 @@
-import React from "react";
-import { withRouter } from "react-router-dom";
+// import React from "react";
+import React, { useEffect, useState } from "react";
+import { withRouter } from "./with-router";
+// import AuthVerify from "./common/AuthVerify";
+import AuthService from "../services/auth.service";
 
 const parseJwt = (token) => {
   try {
@@ -8,20 +11,35 @@ const parseJwt = (token) => {
     return null;
   }
 };
-
+// const [showModeratorBoard, setShowModeratorBoard] = useState(false);
+//   const [showAdminBoard, setShowAdminBoard] = useState(false);
+//   const [currentUser, setCurrentUser] = useState(undefined);
+//   const logOut = () => {
+//     AuthService.logout();
+//     setShowModeratorBoard(false);
+//     setShowAdminBoard(false);
+//     setCurrentUser(undefined);
+//   };
 const AuthVerify = (props) => {
-  props.history.listen(() => {
+  let location = props.router.location;
+  
+ 
+  console.log(location);
+  useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (user) {
-      const decodedJwt = parseJwt(user.accessToken);
+      const decodedJwt = parseJwt(user.token);
 
-      if (decodedJwt.exp * 1000 < Date.now()) {
-        props.logOut();
+      if (null !== decodedJwt && decodedJwt.exp * 1000 < Date.now()) {
+        AuthService.logout();
+        // location.pathname="/login";
+        console.log("****" +location.pathname);
       }
     }
   });
-
+  // location.pathname="/login";
+  // console.log("------" +location.pathname);
   return <div></div>;
 };
 
