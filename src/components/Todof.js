@@ -5,8 +5,6 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { isEmail } from "validator";
-import AuthService from "../services/auth.service";
 
 
 const required = (value) => {
@@ -90,23 +88,34 @@ function Todof(props) {
       };
 
 
-
-
+      function refreshPage() {
+        window.location.refreshPage(true);
+      }
+      function sleep(time){
+        return new Promise((resolve)=>setTimeout(resolve,time)
+      )
+  }
     function handleSubmit(e) {
         e.preventDefault();
-        form.current.validateAll();
+        setMessage("");
         setSuccessful(false);
+        form.current.validateAll();
+        
         if (checkBtn.current.context._errors.length === 0 && name.length > 0) {
             props.addTask(name, date, edate);
-           
+            setMessage("Task Created Successfully");
+            // alert();
+            
+            setSuccessful(true);
             setName("");
             setDate(new Date());
             setEDate(new Date());
-            setSuccessfull(false);
-            
-        } else {
-            setSuccessfull(true);
-            console.log(successfull);
+          
+            // 
+
+            sleep(2000).then(()=>{
+              window.location.reload(true);
+           })
         }
 
     }
@@ -195,7 +204,7 @@ function Todof(props) {
         //     </div>
         // </form>
 
-        <div className="col-md-12">
+        <div>
       <div className="card card-container">
 
         <Form onSubmit={handleSubmit} ref={form}>
