@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:3000/api/auth/";
+const REDIRECT_URL = "http://localhost:3000/";
 
 const register = (username, email, password) => {
   return axios.post(API_URL + "signup", {
@@ -17,12 +18,14 @@ const todo = (user) => {
 console.log(todo);
 
 
-const saveTodo = (id, name, date, completed, user) => {
+const saveTodo = (id, name, date, edate, comment, completed, user) => {
   return axios
   .post(API_URL + "saveTodos", {
     id,
     name,
     date,
+    edate,
+    comment,
     completed,
     user,
   })
@@ -33,11 +36,13 @@ const saveTodo = (id, name, date, completed, user) => {
   });
 };
 
-const updateTodo = (name, date, completed, user,id) => {
+const updateTodo = (name, date, edate,comment, completed, user,id) => {
   return axios
   .put(API_URL + "updateTodos", {
     name,
     date,
+    edate,
+    comment,
     completed,
     user,
     id,
@@ -65,6 +70,9 @@ const login = (username, password) => {
     .post(API_URL + "signin", {
       username,
       password,
+    }, {
+      headers: {'Access-Control-Allow-Origin': '*'}
+
     })
     .then((response) => {
       if (response.data.username) {
@@ -77,7 +85,10 @@ const login = (username, password) => {
 
 const logout = () => {
   localStorage.removeItem("user");
+  window.localStorage.clear();
+  window.location.href = REDIRECT_URL + "login";
   return axios.post(API_URL + "signout").then((response) => {
+    console.log(response.data);
     return response.data;
   });
 };

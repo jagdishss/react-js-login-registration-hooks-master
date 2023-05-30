@@ -13,7 +13,7 @@ import BoardUser from "./components/BoardUser";
 import BoardModerator from "./components/BoardModerator";
 import BoardAdmin from "./components/BoardAdmin";
 
-// import AuthVerify from "./common/AuthVerify";
+import AuthVerify from "./common/AuthVerify";
 import EventBus from "./common/EventBus";
 
 
@@ -27,7 +27,8 @@ const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
-
+  // this.logOut = this.logOut.bind(this);
+ 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
 
@@ -54,7 +55,9 @@ const App = () => {
   };
 
   return (
+   
     <div>
+      {/* <AuthVerify logOut={this.logOut}/> */}
       <nav className="navbar navbar-expand navbar-dark bg-dark">
       
         <div className="navbar-nav mr-auto">
@@ -132,7 +135,7 @@ const App = () => {
         </Routes>
       </div>
 
-      {/* <AuthVerify logOut={logOut}/> */}
+      <AuthVerify logOut={logOut}/>
     </div>
   );
 };
