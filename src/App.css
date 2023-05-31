@@ -102,8 +102,9 @@ body {
 /*END RESETS*/
 /* GLOBAL STYLES */
 .form-group > input[type="text"] {
-  display: inline-block;
-  margin-top: 0.4rem;
+  /* display: inline-block; */
+  margin-top: 10.4rem;
+  display:inline-block;margin-right:10px; width:200px;
 }
 .btn {
   padding: 0.8rem 1rem 0.7rem;
